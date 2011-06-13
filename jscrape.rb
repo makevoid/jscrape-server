@@ -1,3 +1,6 @@
+require "rubygems"
+require 'bundler/setup'
+
 require 'goliath'
 require 'em-http'
 require 'em-synchrony'
