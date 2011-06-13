@@ -50,12 +50,9 @@ namespace :git do
   task :setup, :roles => :app do
     
     app_name = application
-    exec "cd #{path}; tar -cvf veeplay.tar #{app_name}"
-    exec "cd #{path}; scp veeplay.tar git@makevoid.com:/git"
-    exec "ssh git@makevoid.com tar -xvf /git/#{app_name}.tar "
-    # ssh > tar -xvf
-    # rm -rf veeplay/ veeplay.tar
-    # git clone git@makevoid.com:/git/#{app_name}
+    exec "ssh git@makevoid.com 'mkdir -p /git/#{app_name}; cd /git/#{app_name}; git init --bare' "
+    exec "cd #{path}; git add origin ssh+git://git@makevoid.com/git/#{app_name}"
+    puts "You can now \"git commit -m '...' \" and 'git push origin master'"
     
   end
 end
