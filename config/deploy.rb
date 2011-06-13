@@ -52,8 +52,10 @@ namespace :git do
     app_name = application
     exec "cd #{path}; tar -cvf veeplay.tar #{app_name}"
     exec "cd #{path}; scp veeplay.tar git@makevoid.com:/git"
-    exec "ssh git@makevoid.com tar -xvf /git/veeplay.tar "
-    
+    exec "ssh git@makevoid.com tar -xvf /git/#{app_name}.tar "
+    # ssh > tar -xvf
+    # rm -rf veeplay/ veeplay.tar
+    # git clone git@makevoid.com:/git/#{app_name}
     
   end
 end
