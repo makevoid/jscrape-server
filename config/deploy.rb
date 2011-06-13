@@ -2,6 +2,7 @@ path = File.expand_path "../../", __FILE__
 
 
 set :application, "jscrape"
+set :app_name, application
 
 set :domain,      "makevoid.com"
 
@@ -37,7 +38,8 @@ role :db,  domain, :primary => true
 
 
 after :deploy, "deploy:cleanup"
-after :deploy, "deploy:create_symlinks"
+after :deploy, "serverd:restart"
+#after :deploy, "deploy:create_symlinks"
 #after :deploy, "db:seeds"
 
 def exec(cmd)
@@ -45,11 +47,31 @@ def exec(cmd)
   puts `#{cmd}`
 end
 
+
+port = 9393
+
+namespace :serverd do
+  desc "start the server"
+  task :start do
+    run "cd #{current_path}; bundle exec ruby #{app_name}d.rb start -- -p #{port}"
+  end
+  
+  desc "stop the server"
+  task :stop do
+    run "cd #{current_path}; bundle exec ruby #{app_name}d.rb stop"    
+  end
+  
+  desc "restarts the server"
+  task :restart do
+    run "cd #{current_path}; bundle exec ruby #{app_name}d.rb restart -- -p #{port}"    
+  end
+end
+
+
 namespace :git do
   desc "Setup git on makevoid.com"
   task :setup, :roles => :app do
     
-    app_name = application
     exec "ssh git@makevoid.com 'mkdir -p /git/#{app_name}; cd /git/#{app_name}; git init --bare' "
     exec "cd #{path}; git add origin ssh+git://git@makevoid.com/git/#{app_name}"
     puts "You can now \"git commit -m '...' \" and 'git push origin master'"
@@ -61,12 +83,14 @@ namespace :deploy do
   
   desc "Restart Application"
   task :restart, :roles => :app do
+    run ""
+    
     run "touch #{current_path}/tmp/restart.txt"
   end
   
   desc "Create some symlinks from shared to public"
-  task :create_symlinks do
-    run "cd #{current_path}/public; ln -s #{deploy_to}/shared/projects_src projects_src"
+  task :create_symlinks do    
+      # run "cd #{current_path}/public; ln -s #{deploy_to}/shared/projects_src projects_src"
   end
   
 end
