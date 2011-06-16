@@ -12,19 +12,28 @@ require "#{path}/lib/goliath-env"
 require 'uri'
 
 
+Goliath.env = :test
 class Jscrape < Goliath::API
   # reload code on every request in dev environment
   use ::Rack::Reloader, 0 if Goliath.dev?
 
-  def scrape(url)
-    url = URI.unescape url
-    resp = EM::HttpRequest.new(url).get :timeout => 4 
+  def get_url(url, requests=[])
+    req = EM::HttpRequest.new(url).get :timeout => 4 
     
-    if resp.response_header.status == 200
-      resp.response
+    status = req.response_header.status
+    if status == 200 || status.to_s =~ /30[123]/
+      responses << req.response
+      raise req.response
+      
+      get_url(url, { responses: responses })
     else
       raise "scraping failed: #{url}"
     end
+  end
+
+  def scrape(url)
+    url = URI.unescape url
+    get_url url
   end
   
   def response(env)
