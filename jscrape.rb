@@ -44,7 +44,9 @@ class Jscrape < Goliath::API
     #return raise "You can't use GET requests" if  env.get?
     if match = request.path.match(/^\/q\/(?<url>.*)/)
       body, responses = scrape match[:url]
-      headers["Access-Control-Allow-Origin"] = env["HTTP_HOST"]
+      host = "http://#{env["HTTP_HOST"]}"
+      #raise host.inspect
+      headers["Access-Control-Allow-Origin"] = host
     else  
       body = "Resource not found"
     end
