@@ -21,13 +21,15 @@ class Jscrape < Goliath::API
     req = EM::HttpRequest.new(url).get :timeout => 4 
     
     status = req.response_header.status
-    if status == 200 || status.to_s =~ /30[123]/
-      responses << req.response
-      raise req.response
-      
+    responses = [] unless responses
+    if status.to_s =~ /20[0123456]/
+      [req.response, responses]
+    elsif status.to_s =~ /30[0123]/
+      responses << [url, status]
+      url = req.response_header.location      
       get_url(url, { responses: responses })
     else
-      raise "scraping failed: #{url}"
+      raise "scraping failed: #{url} - status: #{status}"
     end
   end
 
@@ -41,8 +43,8 @@ class Jscrape < Goliath::API
     request = env.request
     #return raise "You can't use GET requests" if  env.get?
     if match = request.path.match(/^\/q\/(?<url>.*)/)
-      body = scrape match[:url]
-      headers["Access-Control-Allow-Origin"] = request.origin
+      body, responses = scrape match[:url]
+      headers["Access-Control-Allow-Origin"] = env["HTTP_HOST"]
     else  
       body = "Resource not found"
     end
