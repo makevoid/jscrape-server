@@ -30,8 +30,15 @@ more infos: [http://jscrape.it](jscrape.it)
   
 or (daemonized)
   
-    ruby jscraped.rb start
-
+    ruby jscraped.rb start -p 3000
 
 
 enjoy!
+
+
+
+p.s.: don't forget to set
+
+    $.jScrape_server = "localhost:3000"
+  
+or whatever your host/port is on your clientside javascript code.
