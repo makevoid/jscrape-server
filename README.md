@@ -1,5 +1,5 @@
 # jScrape
-## server
+### server
 
 ### scraping in javascript made easy
 
@@ -16,3 +16,22 @@ What do I need to run the scraping in production?
 
 
 more infos: [http://jscrape.it](jscrape.it)
+
+
+### Setup
+
+    git clone git://github.com/makevoid/jscrape-server.git
+    cd jscrape-server
+    bundle install    
+
+### Run
+
+    ruby jscrape.rb -p 3000
+  
+or (daemonized)
+  
+    ruby jscraped.rb start
+
+
+
+enjoy!
