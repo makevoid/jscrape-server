@@ -42,3 +42,16 @@ p.s.: don't forget to set
     $.jScrape_server = "localhost:3000"
   
 or whatever your host/port is on your clientside javascript code.
+
+
+### Changes:
+
+added cookie support (api will probably change)
+
+example: 
+
+    http://jscrape.it/q/<URL>/<COOKIE>
+
+    http://jscrape.it/q/http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjL1KiWN26Q0/PREF=f1=40000000&f2=40000000
+
+returns a youtube video (html5 version)

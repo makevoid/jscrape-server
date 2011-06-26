@@ -17,11 +17,8 @@ class Jscrape < Goliath::API
   # reload code on every request in dev environment
   use ::Rack::Reloader, 0 if Goliath.dev?
 
-  def get_url(url, requests=[])
-    head = { :"cookie" => "f2=40000000" }
-    req = EM::HttpRequest.new(url).head(head).get :timeout => 4 
-    
-
+  def get_url(url, headers={}, requests=[])
+    req = EM::HttpRequest.new(url).get timeout: 4, head: headers
     
     status = req.response_header.status
     responses = [] unless responses
@@ -30,15 +27,17 @@ class Jscrape < Goliath::API
     elsif status.to_s =~ /30[0123]/
       responses << [url, status]
       url = req.response_header.location      
-      get_url(url, { responses: responses })
+      get_url(url, headers, { responses: responses })
     else
       raise "scraping failed: #{url} - status: #{status}"
     end
   end
 
-  def scrape(url)
+  def scrape(url, cookie=nil)
     url = URI.unescape url
-    get_url url
+    headers = {}
+    headers = { :"cookie" => cookie } if cookie
+    get_url url, headers
   end
   
   def response(env)
@@ -46,7 +45,8 @@ class Jscrape < Goliath::API
     request = env.request
     #return raise "You can't use GET requests" if  env.get?
     if match = request.path.match(/^\/q\/(?<url>.*)/)
-      body, responses = scrape match[:url]
+      match2 = request.path.match(/\/q\/.+\/(?<cookie>.+)$/)
+      body, responses = scrape match[:url], match2[:cookie]
       #host = "http://#{env["HTTP_HOST"]}"
       #raise host.inspect
       headers["Access-Control-Allow-Origin"] = "*" #host
