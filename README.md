@@ -50,8 +50,8 @@ added cookie support (api will probably change)
 
 example: 
 
-    http://jscrape.it/q/<URL>/<COOKIE>
+    http://jscrape.it:9393//q/<URL>/<COOKIE>
 
-    http://jscrape.it/q/http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjL1KiWN26Q0/PREF=f1=40000000&f2=40000000
+    http://jscrape.it:9393/q/http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjL1KiWN26Q0/PREF=f1=40000000&f2=40000000
 
 returns a youtube video (html5 version)
