@@ -18,7 +18,10 @@ class Jscrape < Goliath::API
   use ::Rack::Reloader, 0 if Goliath.dev?
 
   def get_url(url, requests=[])
-    req = EM::HttpRequest.new(url).get :timeout => 4 
+    head = { :"cookie" => "f2=40000000" }
+    req = EM::HttpRequest.new(url).head(head).get :timeout => 4 
+    
+
     
     status = req.response_header.status
     responses = [] unless responses
