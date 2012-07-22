@@ -30,7 +30,7 @@ more infos: [http://jscrape.it](jscrape.it)
   
 or (daemonized)
   
-    ruby jscraped.rb start -p 3000
+    ruby jscraped.rb start -- -p 3000
 
 
 enjoy!
@@ -53,5 +53,9 @@ example:
     http://jscrape.it:9393//q/<URL>/<COOKIE>
 
     http://jscrape.it:9393/q/http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjL1KiWN26Q0/PREF=f1=40000000&f2=40000000
-
-returns a youtube video (html5 version)
+    # returns a youtube video (html5 version)
+    
+    
+    # ajax request (using jquery):  
+    $.get("http://jscrape.it:9393/q/"+encodeURIComponent("http://makevoid.com"), function(data){ console.log(data)  })
+    
